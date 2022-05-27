@@ -7,6 +7,7 @@ const
     }),
     validator = require('validator'), // third-party module
     chalk = require('chalk'), // third-party module
+    ucwords = require('ucwords'), // third-party module
     // question1 = () => { // Readline with Promise and Async Await (Contact App)
     //     return new Promise((resolve, reject) => {
     //         rl.question('What is your phone number? ', (phone) => {
@@ -37,7 +38,7 @@ const
     },
     loadContact = () => {
         const
-            file = fs.readFileSync('../docs/contacts.json', 'utf-8'),
+            file = fs.readFileSync('./docs/contacts.json', 'utf-8'),
             contacts = JSON.parse(file);
         return contacts;
     },
@@ -78,14 +79,27 @@ const
         });
     },
     detailContact = (name) => {
-        const contacts = loadContact();
-        const contact = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
+        const
+            contacts = loadContact(),
+            contact = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
         if (!contact) {
             console.log(chalk.white.bgRed.bold('Contact not found!'));
             return rl.close();
         }
         console.log(`${contact.name} | ${contact.phone} | ${contact.email}`);
         return rl.close();
+    },
+    deleteContact = (name) => {
+        const
+            contacts = loadContact(),
+            newContacts = contacts.filter((contact) => contact.name.toLowerCase() !== name.toLowerCase());
+        if (contacts.length === newContacts.length) {
+            console.log(chalk.white.bgRed.bold(`${ucwords(name)} does not exist!`));
+            return rl.close();
+        }
+        fs.writeFileSync('../docs/contacts.json', JSON.stringify(newContacts), 'utf-8');
+        console.log(chalk.white.bgGreen.bold(`${ucwords(name)} has been deleted!`));
+        rl.close();
     };
 
-module.exports = { writeQuestion, saveContact, listContact, detailContact };
+module.exports = { writeQuestion, loadContact, saveContact, listContact, detailContact, deleteContact };

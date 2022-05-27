@@ -1,10 +1,13 @@
 const
     fs = require('fs'), // core module
+    http = require('http'), // core module
     validator = require('validator'), // third-party module
     chalk = require('chalk'), // third-party module
+    ucwords = require('ucwords'), // third-party module
     yargs = require('yargs'), // third-party module
     local = require('./local'), // local module
     contactApp = require('./contact-app'), // local module
+    port = 3000,
     main = async () => {
         const
             name = await contactApp.writeQuestion('What is your name? '),
@@ -80,51 +83,88 @@ const
 //     });
 // });
 
-// Contact App
+// Contact App (command line)
 // main(); // Execute Contact App (readline)
-yargs.command({ // Add contact directly on command line (yargs)
-    command: 'add',
-    describe: 'Add a new contact',
-    builder: {
-        name: {
-            describe: 'Name of the contact',
-            demandOption: true,
-            type: 'string'
-        },
-        phone: {
-            describe: 'Phone number of the contact',
-            demandOption: true,
-            type: 'string'
-        },
-        email: {
-            describe: 'Email address of the contact',
-            demandOption: true,
-            type: 'string'
-        }
-    },
-    handler(argv) {
-        contactApp.saveContact(argv.name, argv.phone, argv.email);
+// yargs.command({ // Add contact (yargs)
+//     command: 'add',
+//     describe: 'Add a new contact',
+//     builder: {
+//         name: {
+//             describe: 'Name of the contact',
+//             demandOption: true,
+//             type: 'string'
+//         },
+//         phone: {
+//             describe: 'Phone number of the contact',
+//             demandOption: true,
+//             type: 'string'
+//         },
+//         email: {
+//             describe: 'Email address of the contact',
+//             demandOption: true,
+//             type: 'string'
+//         }
+//     },
+//     handler(argv) {
+//         contactApp.saveContact(argv.name, argv.phone, argv.email);
+//     }
+// }).demandCommand();
+// yargs.command({ // List all contacts (yargs)
+//     command: 'list',
+//     describe: 'List all contacts',
+//     handler() {
+//         contactApp.listContact();
+//     }
+// });
+// yargs.command({ // Show detail of a contact (yargs)
+//     command: 'detail',
+//     describe: 'Show detail of a contact',
+//     builder: {
+//         name: {
+//             describe: 'Name of the contact',
+//             demandOption: true,
+//             type: 'string'
+//         }
+//     },
+//     handler(argv) {
+//         contactApp.detailContact(argv.name);
+//     }
+// });
+// yargs.command({ // Delete a contact (yargs)
+//     command: 'delete',
+//     describe: 'Delete a contact by name',
+//     builder: {
+//         name: {
+//             describe: 'Name of the contact',
+//             demandOption: true,
+//             type: 'string'
+//         }
+//     },
+//     handler(argv) {
+//         contactApp.deleteContact(argv.name);
+//     }
+// });
+// yargs.parse();
+
+// Simple & hard coded Web Server with HTTP module
+http.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+
+    const url = req.url;
+    if (url === '/') {
+        fs.readFile('../index.html', (err, data) => {
+            if (err) {
+                res.writeHead(404);
+                res.write('Error: ' + err);
+            } else {
+                res.write(data);
+                res.end();
+            }
+        });
+    } else {
+        res.write('<h1>Hello son of a bitch!</h1>');
+        res.end();
     }
-}).demandCommand();
-yargs.command({ // List all contacts (yargs)
-    command: 'list',
-    describe: 'List all contacts',
-    handler() {
-        contactApp.listContact();
-    }
+}).listen(port, () => {
+    console.log(`Server is listening on port ${port}...`);
 });
-yargs.command({ // Show detail of a contact (yargs)
-    command: 'detail',
-    describe: 'Show detail of a contact',
-    builder: {
-        name: {
-            describe: 'Name of the contact',
-            demandOption: true,
-            type: 'string'
-        }
-    },
-    handler(argv) {
-        contactApp.detailContact(argv.name);
-    }
-})
-yargs.parse();
