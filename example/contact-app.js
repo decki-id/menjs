@@ -42,6 +42,38 @@ const
             contacts = JSON.parse(file);
         return contacts;
     },
+    findContact = (name) => {
+        const
+            contacts = loadContact(),
+            contact = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
+        return contact;
+    },
+    duplicateCheck = (name) => {
+        const contacts = loadContact();
+        return contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
+    },
+    addContact = (contact) => {
+        const contacts = loadContact();
+        contacts.push(contact);
+        saveContactUI(contacts);
+    },
+    updateContact = (newContact) => {
+        const
+            contacts = loadContact(),
+            filteredContacts = contacts.filter((contact) => contact.name.toLowerCase() !== newContact.oldName.toLowerCase());
+        delete newContact.oldName;
+        filteredContacts.push(newContact);
+        saveContactUI(filteredContacts);
+    },
+    deleteContactUI = (name) => {
+        const
+            contacts = loadContact(),
+            filteredContacts = contacts.filter((contact) => contact.name.toLowerCase() !== name.toLowerCase());
+        saveContactUI(filteredContacts);
+    },
+    saveContactUI = (contacts) => {
+        fs.writeFileSync('./docs/contacts.json', JSON.stringify(contacts));
+    },
     saveContact = (name, phone, email) => {
         try {
             fs.readFileSync('../docs/contacts.json', 'utf-8');
@@ -50,8 +82,8 @@ const
         }
         const
             contact = { name, phone, email },
-            contacts = loadContact();
-        checkDuplicateName = contacts.find(contact => contact.name === name),
+            contacts = loadContact(),
+            checkDuplicateName = contacts.find(contact => contact.name === name),
             checkDuplicatePhone = contacts.find(contact => contact.phone === phone),
             checkDuplicateEmail = contacts.find(contact => contact.email === email);
         if (checkDuplicateName) {
@@ -102,4 +134,4 @@ const
         rl.close();
     };
 
-module.exports = { writeQuestion, loadContact, saveContact, listContact, detailContact, deleteContact };
+module.exports = { writeQuestion, loadContact, findContact, duplicateCheck, addContact, updateContact, deleteContactUI, saveContactUI, saveContact, listContact, detailContact, deleteContact };
