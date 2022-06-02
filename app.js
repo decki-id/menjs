@@ -5,9 +5,10 @@ const
     cookieParser = require('cookie-parser'),
     flash = require('connect-flash'),
     { body, validationResult, check } = require('express-validator'),
-    { loadContact, findContact, addContact, duplicateCheck, deleteContactUI, updateContact } = require('./example/contact-app'),
+    { loadContact, findContact, addContact, duplicateCheck, deleteContactUI, updateContact } = require('./examples/contact-app'),
     app = express(),
-    port = 3000;
+    port = 3000,
+    { dbName, client } = require('./examples/mongodb');
 
 
 // Middleware configuration

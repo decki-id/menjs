@@ -7,6 +7,8 @@ const
         useUnifiedTopology: true
     });
 
+module.exports = { dbName, client };
+
 client.connect((err, client) => {
     if (err) {
         return console.log(err);
@@ -66,19 +68,25 @@ client.connect((err, client) => {
     // );
 
     // Update documents
-    db.collection('students').updateMany(
-        {
-            status: "Inactive"
-        },
-        {
-            $set: {
-                phone: "+79031234567"
-            }
-        }
-    );
+    // db.collection('students').updateMany(
+    //     {
+    //         status: "Inactive"
+    //     },
+    //     {
+    //         $set: {
+    //             phone: "+79031234567"
+    //         }
+    //     }
+    // );
+
+    // Delete a document
+    // db.collection('students').deleteOne({ name: 'Jane' });
+
+    // Delete documents
+    // db.collection('students').deleteMany({ status: 'Inactive' });
 
     // Find all documents
-    console.log(db.collection('students').find().toArray((error, result) => { console.log(result) }));
+    // console.log(db.collection('students').find().toArray((error, result) => { console.log(result) }));
 
     // Find documents by query
     // console.log(db.collection('students').find({ name: 'John' }).toArray((error, result) => { console.log(result) }));
