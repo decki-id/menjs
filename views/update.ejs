@@ -13,7 +13,8 @@
             </div>
             <% } %>
 
-            <form method="post" action="/contact-app/update">
+            <form method="post" action="/contact-app?_method=put">
+                <input type="hidden" name="_id" value="<%= contact._id %>">
                 <input type="hidden" name="oldName" value="<%= contact.oldName || contact.name %>">
                 <div class="mb-3 mt-3">
                     <label for="name" class="form-label">Name</label>
@@ -21,11 +22,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="<%= contact.phone %>">
+                    <input type="number" class="form-control" id="phone" name="phone" value="<%= contact.phone %>">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="<%= contact.email %>">
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="status" name="status" value="<%= contact.status %>">
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
                 <a href="/contact-app" class="btn btn-secondary">Cancel</a>

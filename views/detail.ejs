@@ -7,12 +7,16 @@
             <% } else { %>
             <div class="card mt-3" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title"><%= contact.name %></h5>
-                    <h6 class="card-subtitle mb-2 text-muted"><%= contact.phone %></h6>
-                    <p class="card-text"><%= contact.email %></p>
+                    <h5 class="card-title mb-3"><%= contact.name %></h5>
+                    <h6 class="card-subtitle text-muted"><%= contact.phone %></h6>
+                    <p class="card-text"><%= contact.email %> <br> <%= contact.status %></p>
                     <a href="/contact-app" class="btn btn-secondary badge pt-0">&laquo; Back</a>
                     <a href="/contact-app/update/<%= contact.name %>" class="btn btn-success badge pt-0">Update</a>
-                    <a href="/contact-app/delete/<%= contact.name %>" class="btn btn-danger badge pt-0" onclick="return confirm('Are you sure, motherfucker?');">Delete</a>
+                    <form action="/contact-app?_method=delete" method="post" class="d-inline">
+                        <input type="hidden" name="name" value="<%= contact.name %>">
+                        <button type="submit" class="btn btn-danger badge pt-0" onclick="return confirm('Are you sure, motherfucker?');">Delete</button>
+                    </form>
+                    <!-- <a href="/contact-app/delete/<%= contact.name %>" class="btn btn-danger badge pt-0" onclick="return confirm('Are you sure, motherfucker?');">Delete</a> -->
                 </div>
             </div>
             <% } %>
